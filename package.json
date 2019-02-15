@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=80 pm2 start ./bin/www --watch",
-    "dev": "nodemon  ./bin/www"
+    "start": "cross-env NODE_ENV=production PORT=80 pm2 start ./bin/www --watch"
   },
   "dependencies": {
     "connect-history-api-fallback": "^1.6.0",
