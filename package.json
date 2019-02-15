@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "pm2 start ./bin/www --watch"
+    "start": "cross-env NODE_ENV=production PORT=80 pm2 start ./bin/www --watch",
+    "dev": "nodemon  ./bin/www"
   },
   "dependencies": {
     "connect-history-api-fallback": "^1.6.0",
     "connect-redis": "^3.4.0",
     "cookie-parser": "~1.4.3",
+    "cross-env": "^5.2.0",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "express-session": "^1.15.6",
