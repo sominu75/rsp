@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "lyL-;;E~#2}fW|$b<moY7+;Mqp]{z<#Y",
+    "database": "dbmasteruser",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "lyL-;;E~#2}fW|$b<moY7+;Mqp]{z<#Y",
+    "database": "dbmasteruser",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "dbmasteruser",
+    "password": "lyL-;;E~#2}fW|$b<moY7+;Mqp]{z<#Y",
+    "database": "dbmasteruser",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
