@@ -16,8 +16,8 @@
   "production": {
     "username": "dbmasteruser",
     "password": "lyL-;;E~#2}fW|$b<moY7+;Mqp]{z<#Y",
-    "database": "dbmasteruser",
-    "host": "ls-94dcea4fa44c7992a2562c2af6266c3e68c06929.cusbtgc94dxq.ap-northeast-2.rds.amazonaws.com",
+    "database": "dbmaster",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   }
 }
