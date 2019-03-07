@@ -10,12 +10,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     client_name: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     title: {
       type: DataTypes.STRING(100),
       allowNull: false
+    },
+    participant: {
+      type: DataTypes.INTEGER,
+      defaultValue: 10
     },
     image_name: {
       type: DataTypes.STRING(100),

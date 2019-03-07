@@ -16,6 +16,12 @@ var logoutRouter = require('./routes/logout');
 var adminRouter = require('./routes/admin');
 var addAdminRouter = require('./routes/addAdmin');
 var getAdminListRouter = require('./routes/getAdminList');
+var addCampaignRouter = require('./routes/addCampaign');
+var addEventRouter = require('./routes/addEvent');
+var getCampaignListRouter = require('./routes/getCampaignList');
+var getEventListRouter = require('./routes/getEventList');
+var eventSelectListRouter = require('./routes/eventSelect');
+
 var moment = require('moment');
 
 var sequelize = require('./models').sequelize;
@@ -62,6 +68,7 @@ console.log(moment().format("YYYY-MM-DD HH:mm:ss"));
 console.log(moment().valueOf());
 console.log(moment('2019-03-10 13:30'));
 console.log(moment.locale());
+console.log('__dirname:', __dirname);
 // app.use(session({
 //   store: new RedisStore(/*redis config: host, port 등*/), // 세션 저장소를 레디스 서버로 설정
 //   /* 이하 express.session 코드와 동일 */
@@ -76,6 +83,11 @@ app.use('/api/logout', logoutRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/addAdmin', addAdminRouter);
 app.use('/api/getAdminList', getAdminListRouter);
+app.use('/api/addCampaign', addCampaignRouter);
+app.use('/api/addEvent', addEventRouter);
+app.use('/api/getCampaignList', getCampaignListRouter);
+app.use('/api/getEventList', getEventListRouter);
+app.use('/api/eventSelect', eventSelectListRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

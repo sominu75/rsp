@@ -50,7 +50,7 @@ router.post('/', async (req, res, next) => {
         data.res = NetValues.REQ_OK;
         res.send(data);
       } catch (e) {
-        data.res = NetValues.REQ_DB_ERRO;
+        data.res = NetValues.REQ_DB_ERROR;
         res.send(data);
       }
     } else {
