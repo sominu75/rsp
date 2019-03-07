@@ -50,16 +50,21 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 
 app.use(session({
-  store: new RedisStore({
-    host: 'localhost',
-    port: 6379,
-    client: redisClient,
-    ttl: 260
-  }),
-  resave: false,
-  saveUninitialized: true,
-  secret: 'root'
+	secret: 'rsp', //keboard cat (랜덤한 값)
+	resave: false,
+	saveUninitialized: true
 }));
+// app.use(session({
+//   store: new RedisStore({
+//     host: 'localhost',
+//     port: 6379,
+//     client: redisClient,
+//     ttl: 260
+//   }),
+//   resave: false,
+//   saveUninitialized: true,
+//   secret: 'root'
+// }));
 let now = Date.now();
 let now2 = new Date().toISOString();
 console.log('now:', now);
