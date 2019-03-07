@@ -45,6 +45,7 @@ router.post('/', async (req, res, next) => {
     }
     // console.log('user:', user);
   } catch (e) {
+    console.log('error login:', e);
     data.res = NetValues.REQ_NO;
     res.send(data);
   }
