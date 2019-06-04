@@ -14,11 +14,13 @@ router.post('/', async (req, res, next) => {
   //   console.log('req.session.userid:', req.session.user.id);
   if (req.session.user) {
     const root_qey = await Campaign.findAll({
+      order: [['date', 'DESC']],
       where: {
         id: req.body.root_id
       }
     });
     const user_qey = await Event.findAll({
+      order: [['date', 'DESC']],
       where: {
         root_id: req.body.root_id
       }

@@ -11,12 +11,15 @@ var AWS = require("aws-sdk");
 AWS.config.loadFromPath("./config/awsconfig.json");
 var s3 = new AWS.S3();
 var multerS3 = require('multer-s3');
+var moment = require('moment');
+var Utill = require('../lib/Utill');
 
 
 
 /* module */
 var multer = require('multer');
 var fs = require('fs');
+var utill = new Utill();
 
 var uploads = multer({
   storage: multerS3({
@@ -41,6 +44,8 @@ var delectImage = function(item) {
 
   })
 };
+
+
 /* GET users listing. */
 router.post('/', uploads.single('log_image'), async (req, res, next) => {
   console.log('req.file:', req.file);
@@ -58,38 +63,56 @@ router.post('/', uploads.single('log_image'), async (req, res, next) => {
           image_name: req.file.key,
           time: req.body.time
         });
+        data.res = NetValues.REQ_OK;
+        res.send(data);
         console.log('Campaign.create 2');
       } else if (req.body.add_id == NetValues.UPDATE_DB) {
+        const campaign_qey = await Campaign.findAll({
+          where: {
+            id: req.body.id
+          }
+        });
         if (req.file != null) {
-          const campaign_qey = await Campaign.findAll({
-            where: {
-              id: req.body.id
-            }
-          });
           delectImage('campaign_images/' + campaign_qey[0].image_name);
           console.log('req:', campaign_qey[0].image_name);
-          const qery = await Campaign.update({
-            client_name: req.body.client_name,
-            title: req.body.title,
-            participant: req.body.participant,
-            image_name: req.file.key,
-            time: req.body.time
-          }, {
-            where: {
-              id: req.body.id
-            }
-          });
+
+          if (utill.timeCheck(campaign_qey[0].time, moment().valueOf())) {
+            const qery = await Campaign.update({
+              client_name: req.body.client_name,
+              title: req.body.title,
+              participant: req.body.participant,
+              image_name: req.file.key,
+              time: req.body.time
+            }, {
+              where: {
+                id: req.body.id
+              }
+            });
+            data.res = NetValues.REQ_OK;
+            res.send(data);
+          } else {
+            delectImage('campaign_images/' + req.file.key);
+            data.res = NetValues.TIME_OVER;
+            res.send(data);
+          }
         } else {
-          const qery = await Campaign.update({
-            client_name: req.body.client_name,
-            title: req.body.title,
-            participant: req.body.participant,
-            time: req.body.time
-          }, {
-            where: {
-              id: req.body.id
-            }
-          });
+          if (utill.timeCheck(campaign_qey[0].time, moment().valueOf())) {
+            const qery2 = await Campaign.update({
+              client_name: req.body.client_name,
+              title: req.body.title,
+              participant: req.body.participant,
+              time: req.body.time
+            }, {
+              where: {
+                id: req.body.id
+              }
+            });
+            data.res = NetValues.REQ_OK;
+            res.send(data);
+          } else {
+            data.res = NetValues.TIME_OVER;
+            res.send(data);
+          }
         }
       } else if (req.body.add_id == NetValues.DELETE_DB) {
         const child_qey = await Event.findAll({
@@ -98,8 +121,8 @@ router.post('/', uploads.single('log_image'), async (req, res, next) => {
           }
         });
         console.log('length:', child_qey.length);
-        for(let i = 0; i < child_qey.length; ++i){
-        console.log('name:', child_qey[0].image_name);
+        for (let i = 0; i < child_qey.length; ++i) {
+          console.log('name:', child_qey[0].image_name);
           delectImage('event_images/' + child_qey[i].image_name);
         }
         await Event.destroy({
@@ -113,9 +136,9 @@ router.post('/', uploads.single('log_image'), async (req, res, next) => {
           }
         });
         delectImage('campaign_images/' + req.body.image_name);
+        data.res = NetValues.REQ_OK;
+        res.send(data);
       }
-      data.res = NetValues.REQ_OK;
-      res.send(data);
     } catch (e) {
       console.log('fb error:', e);
       if (req.body.add_id == NetValues.ADD_DB) {

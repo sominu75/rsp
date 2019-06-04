@@ -27,6 +27,7 @@ router.post('/', async (req, res, next) => {
       }
     });
     const user_qey = await Event.findAll({
+      order: [['date', 'DESC']],
       where: {
         root_id: req.body.root_id
       }

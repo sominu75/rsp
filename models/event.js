@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('event', {
+  var Event = sequelize.define('event', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -86,8 +86,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0
     },
     time: {
-      type: DataTypes.STRING(20),
-      allowNull: false
+      type: DataTypes.BIGINT,
+      defaultValue: 0
     },
     date: {
       type: DataTypes.DATE,
@@ -97,4 +97,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: false
   });
+
+
+  return Event;
 };

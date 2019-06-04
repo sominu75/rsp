@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 var User = require('../models').User;
+var Campaign = require('../models').Campaign;
 var Event = require('../models').Event;
 var sequelize = require('../models').sequelize;
 const NetValues = require('../lib/NetValues');
@@ -11,12 +12,14 @@ AWS.config.loadFromPath("./config/awsconfig.json");
 var s3 = new AWS.S3();
 var multerS3 = require('multer-s3');
 var moment = require('moment');
+var Utill = require('../lib/Utill');
 
 
 
 /* module */
 var multer = require('multer');
 var fs = require('fs');
+var utill = new Utill();
 
 var uploads = multer({
   storage: multerS3({
@@ -89,44 +92,66 @@ router.post('/', uploads.single('log_image'), async (req, res, next) => {
             time: moment().valueOf()
           });
         }
+        data.res = NetValues.REQ_OK;
+        res.send(data);
         console.log('Event.create 2');
       } else if (req.body.add_id == NetValues.UPDATE_DB) {
+        const event_qey = await Event.findAll({
+          where: {
+            id: req.body.id
+          }
+        });
+          const campaign_qey = await Campaign.findAll({
+            where: {
+              id: req.body.root_id
+            }
+          });
         if (req.file != null) {
-          const event_qey = await Event.findAll({
-            where: {
-              id: req.body.id
-            }
-          });
-          delectImage('event_images/' + event_qey[0].image_name);
-          console.log('req:', event_qey[0].image_name);
-          const qery = await Event.update({
-            event_name: req.body.event_name,
-            bong: parseInt(req.body.bong),
-            winner: parseInt(req.body.winner),
-            start_time: parseInt(req.body.start_time),
-            youtube_url: req.body.youtube_url,
-            youtube_time: parseInt(req.body.youtube_time),
-            email_content: req.body.email_content,
-            image_name: req.file.key
-          }, {
-            where: {
-              id: req.body.id
-            }
-          });
+          if (utill.timeCheck(campaign_qey[0].time, moment().valueOf())) {
+            delectImage('event_images/' + event_qey[0].image_name);
+            console.log('req:', event_qey[0].image_name);
+            const qery = await Event.update({
+              event_name: req.body.event_name,
+              bong: parseInt(req.body.bong),
+              winner: parseInt(req.body.winner),
+              start_time: parseInt(req.body.start_time),
+              youtube_url: req.body.youtube_url,
+              youtube_time: parseInt(req.body.youtube_time),
+              email_content: req.body.email_content,
+              image_name: req.file.key
+            }, {
+              where: {
+                id: req.body.id
+              }
+            });
+            data.res = NetValues.REQ_OK;
+            res.send(data);
+          } else {
+            delectImage('event_images/' + req.file.key);
+            data.res = NetValues.TIME_OVER;
+            res.send(data);
+          }
         } else {
-          const qery = await Event.update({
-            event_name: req.body.event_name,
-            bong: parseInt(req.body.bong),
-            winner: parseInt(req.body.winner),
-            start_time: parseInt(req.body.start_time),
-            youtube_url: req.body.youtube_url,
-            youtube_time: parseInt(req.body.youtube_time),
-            email_content: req.body.email_content
-          }, {
-            where: {
-              id: req.body.id
-            }
-          });
+          if (utill.timeCheck(campaign_qey[0].time, moment().valueOf())) {
+            const qery = await Event.update({
+              event_name: req.body.event_name,
+              bong: parseInt(req.body.bong),
+              winner: parseInt(req.body.winner),
+              start_time: parseInt(req.body.start_time),
+              youtube_url: req.body.youtube_url,
+              youtube_time: parseInt(req.body.youtube_time),
+              email_content: req.body.email_content
+            }, {
+              where: {
+                id: req.body.id
+              }
+            });
+            data.res = NetValues.REQ_OK;
+            res.send(data);
+          } else {
+            data.res = NetValues.TIME_OVER;
+            res.send(data);
+          }
         }
       } else if (req.body.add_id == NetValues.DELETE_DB) {
         const user_qey = await Event.destroy({
@@ -135,9 +160,9 @@ router.post('/', uploads.single('log_image'), async (req, res, next) => {
           }
         });
         delectImage('event_images/' + req.body.image_name);
+        data.res = NetValues.REQ_OK;
+        res.send(data);
       }
-      data.res = NetValues.REQ_OK;
-      res.send(data);
     } catch (e) {
       console.log('fb error:', e);
       if (req.body.add_id == NetValues.ADD_DB) {

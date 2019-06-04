@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('campaign', {
+  var Campaign = sequelize.define('campaign', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     time: {
-      type: DataTypes.STRING(20),
-      allowNull: false
+      type: DataTypes.BIGINT,
+      defaultValue: 0
     },
     date: {
       type: DataTypes.DATE,
@@ -37,4 +37,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: false
   });
+
+  return Campaign;
 };

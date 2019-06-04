@@ -13,7 +13,9 @@ router.post('/', async (req, res, next) => {
   //   console.log('req.session.userid:', req.session.user.id);
   if (req.session.user) {
     if (req.session.user.level == 1) {
-      const user_qey = await Campaign.findAll();
+      const user_qey = await Campaign.findAll({
+        order: [['date', 'DESC']]
+      });
       console.log('req:', user_qey);
       data.qery = user_qey;
       data.level = req.session.user.level;
@@ -21,6 +23,7 @@ router.post('/', async (req, res, next) => {
       res.send(data);
     } else {
       const user_qey = await Campaign.findAll({
+        order: [['date', 'DESC']],
         where: {
           admin_id: req.session.user.id
         }

@@ -14,6 +14,7 @@ router.post('/', async (req, res, next) => {
   if (req.session.user) {
     if (req.session.user.level == 1) {
       const user_qey = await User.findAll({
+        order: [['date', 'DESC']],
         where: {
           level: 3
         }
